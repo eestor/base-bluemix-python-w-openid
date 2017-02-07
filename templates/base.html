@@ -3,7 +3,7 @@
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-        <title></title>
+        <title>{% block title %} {% endblock %} </title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -19,9 +19,12 @@
                 <h1 class="title">IBM Innovations </h1>
                 <nav>
                     <ul>
-                        <li><a href="#">Members Profile</a></li>
-                        <li><a href="#">Sign Up</a></li>
-                        <li><a href="#">Sign In</a></li>
+                        {% if not session.logged_in %}
+                            <li><a href="{{ url_for('login') }}">Sign In</a></li>
+                        {% else %}
+                            <li><a href="{{ url_for('logout') }}">Logout</a></li>
+                            <li><a href="#">Members Profile</a></li>
+                        {% endif %}
                     </ul>
                 </nav>
             </header>
@@ -30,32 +33,21 @@
         <div class="main-container">
             <div class="main wrapper clearfix">
 
-                <article>
-                    <header>
-                        <h1>Welcome - Your Ideas Matter!</h1>
-                        <p>This is the official website used & managed by IBM Phil. Innovations Team</p>
-                    </header>
-                    <section>
-                        <h2>Projects</h2>
-                        <p> project_1 </p>
-                        <p> project_2 </p>
-                    </section>
-                    <section>
-                        <h2>Devops Services</h2>
-                        <p> Dev_tools_1</p>
-                        <p> Dev_tools_2</p>
-                    </section>
-                    <footer>
-                        <h3>Helpful Links:</h3>
-                        <p> Link_1</p>
-                        <p> Link_2</p>
-                    </footer>
+                <article class="flashes">
+                    {% with messages = get_flashed_messages() %}
+                        {% if messages %}
+                            <ul>
+                                {% for message in messages %}
+                                    <li>{{ message }}</li>
+                                {% endfor %}
+                            </ul>
+                        {% endif %}
+                    {% endwith %}
                 </article>
 
-                <aside>
-                    <h3>The Philosophy Behind Creativity</h3>
-                    <p>Be inspired to do and create for the advancement of the humankind</p>
-                </aside>
+                {% block content %}
+
+                {% endblock %}
 
             </div> <!-- #main -->
         </div> <!-- #main-container -->
